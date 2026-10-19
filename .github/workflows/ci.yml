@@ -1,0 +1,53 @@
+# ─────────────────────────────────────────────────────────────
+# SubDay CI
+# 이 파일은 GitHub Actions 서버에게 주는 "작업 지시서"입니다.
+# 위치가 .github/workflows/ 이면 GitHub이 자동으로 읽습니다.
+# ─────────────────────────────────────────────────────────────
+
+name: CI   # GitHub의 Actions 탭에 보이는 이름
+
+# [언제 실행할까]
+on:
+  push:
+    branches: [ main ]   # main 브랜치에 push할 때
+  pull_request:          # PR을 만들거나 PR에 커밋을 추가할 때
+  workflow_dispatch:     # Actions 탭에서 "Run workflow" 버튼으로 수동 실행
+
+# [무엇을 할까]
+jobs:
+  build:
+    name: Build & Unit Test
+    runs-on: ubuntu-latest   # GitHub이 빌려주는 리눅스 서버 1대 (작업 끝나면 사라짐)
+
+    steps:
+      # 1) 내 저장소 코드를 서버로 내려받기 (서버는 처음에 텅 비어 있음)
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2) Java 설치 (Gradle과 Android 빌드에 필요)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # 3) Gradle 준비 + 캐시 (다음 실행부터 라이브러리 다운로드를 건너뛰어 빨라짐)
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # 4) 단위 테스트 실행 = 내 PC에서 ./gradlew testDebugUnitTest 하는 것과 똑같음
+      #    app/src/test/ 아래의 테스트가 대상 (에뮬레이터 없이 도는 테스트)
+      - name: Unit test
+        run: ./gradlew testDebugUnitTest
+
+      # 5) 디버그 APK 빌드 = 앱이 실제로 만들어지는지 확인
+      - name: Build debug APK
+        run: ./gradlew assembleDebug
+
+      # 6) 테스트가 실패해도 결과 리포트는 올려두기 (Actions 실행 화면에서 다운로드 가능)
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-report
+          path: app/build/reports/tests/
