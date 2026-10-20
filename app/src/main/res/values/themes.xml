@@ -1,16 +1,6 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.SubDay" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-    </style>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 화면 색상과 글꼴은 Compose 테마(ui/theme/Theme.kt)가 담당합니다.
+         이 XML 테마는 앱이 켜지는 순간(Compose가 그리기 전)의 창 배경에만 쓰입니다. -->
+    <style name="Theme.SubDay" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>
