@@ -1,4 +1,4 @@
-package com.jeongmango.subday.ui.theme
+package com.jeongmango.subday.core.designsystem.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

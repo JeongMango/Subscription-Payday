@@ -35,10 +35,11 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
 
-      # 4) 단위 테스트 실행 = 내 PC에서 ./gradlew testDebugUnitTest 하는 것과 똑같음
-      #    app/src/test/ 아래의 테스트가 대상 (에뮬레이터 없이 도는 테스트)
+      # 4) 단위 테스트 실행 = 내 PC에서 ./gradlew test 하는 것과 똑같음
+      #    모든 모듈의 src/test/ 아래 테스트가 대상 (에뮬레이터 없이 도는 테스트)
+      #    testDebugUnitTest는 Android 모듈만 돌리므로 core:domain 같은 순수 Kotlin 모듈이 빠집니다.
       - name: Unit test
-        run: ./gradlew testDebugUnitTest
+        run: ./gradlew test
 
       # 5) 디버그 APK 빌드 = 앱이 실제로 만들어지는지 확인
       - name: Build debug APK
@@ -50,5 +51,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: unit-test-report
-          path: app/build/reports/tests/
+          path: '**/build/reports/tests/'   # 모든 모듈의 리포트
           if-no-files-found: ignore   # 테스트 전에 실패하면 리포트가 없으므로 경고 생략
