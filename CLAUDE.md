@@ -68,6 +68,7 @@ build-logic         모듈 공통 Gradle 설정 (컨벤션 플러그인)
 ## 참고 문서
 
 - `docs/commit-convention.md`: 커밋 규칙
+- `docs/build-structure.md`: 단일 모듈 기준으로 설명한 멀티 모듈과 build-logic 구조
 - `docs/architecture.md`: MVVM, Compose, 모듈 구조 설명 (작성 예정)
 - `docs/decisions.md`: 설계 결정 기록 (작성 예정)
 - `../doc/구독관리앱-사이드프로젝트.md`: 전체 기획서 (저장소 밖, 마일스톤과 결제일 계산 규칙 표)
