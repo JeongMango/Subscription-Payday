@@ -7,4 +7,6 @@ plugins {
 dependencies {
     // api: domain을 쓰는 모듈은 model도 자동으로 쓸 수 있습니다.
     api(projects.core.model)
+    // Repository가 Flow(시간에 따라 바뀌는 값의 흐름)를 돌려주므로 함께 공개합니다.
+    api(libs.kotlinx.coroutines.core)
 }

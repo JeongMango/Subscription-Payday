@@ -2,6 +2,7 @@
 // domain의 Repository 인터페이스를 구현합니다. 화면 모듈은 이 모듈을 모릅니다.
 plugins {
     alias(libs.plugins.subday.android.library)
+    alias(libs.plugins.subday.hilt)
 }
 
 android {

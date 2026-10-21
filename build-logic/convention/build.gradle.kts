@@ -8,6 +8,7 @@ dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.compose.gradlePlugin)
+    compileOnly(libs.ksp.gradlePlugin)
 }
 
 // 모듈의 build.gradle.kts에서 plugins { alias(libs.plugins.subday.xxx) }로 가져다 씁니다.
@@ -32,6 +33,10 @@ gradlePlugin {
         register("jvmLibrary") {
             id = "subday.jvm.library"
             implementationClass = "JvmLibraryConventionPlugin"
+        }
+        register("hilt") {
+            id = "subday.hilt"
+            implementationClass = "HiltConventionPlugin"
         }
     }
 }

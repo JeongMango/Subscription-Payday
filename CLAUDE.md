@@ -51,7 +51,9 @@ build-logic         모듈 공통 Gradle 설정 (컨벤션 플러그인)
 
 - 공통 설정(compileSdk, minSdk, Compose 등)은 `build-logic/convention`에서만 바꿉니다. 모듈 파일에 반복해서 적지 않습니다.
 - 라이브러리 버전은 `gradle/libs.versions.toml`에서만 관리합니다.
-- **AGP 8.13 / compileSdk 36 유지 중.** 라이브러리를 추가하거나 올릴 때 AAR의 `minCompileSdk`, `minAndroidGradlePluginVersion`을 확인합니다. 최신 버전 상당수가 AGP 9.1과 compileSdk 37을 요구합니다.
+- **AGP 8.13 / compileSdk 36 / Kotlin 2.2.21 유지 중.** 라이브러리를 추가하거나 올릴 때 AAR의 `minCompileSdk`, `minAndroidGradlePluginVersion`을 확인합니다. 최신 버전 상당수가 AGP 9.1과 compileSdk 37을 요구합니다.
+- Hilt는 2.59부터 AGP 9가 필요해서 2.58을 씁니다. KSP 버전은 Kotlin 버전과 맞춥니다 (`2.2.21-x.x.x`).
+- Hilt를 쓰는 모듈은 `alias(libs.plugins.subday.hilt)`를 추가합니다. feature 모듈은 양식에 이미 포함되어 있습니다.
 
 ## 테스트와 확인
 
@@ -69,6 +71,6 @@ build-logic         모듈 공통 Gradle 설정 (컨벤션 플러그인)
 
 - `docs/commit-convention.md`: 커밋 규칙
 - `docs/build-structure.md`: 단일 모듈 기준으로 설명한 멀티 모듈과 build-logic 구조
-- `docs/architecture.md`: MVVM, Compose, 모듈 구조 설명 (작성 예정)
-- `docs/decisions.md`: 설계 결정 기록 (작성 예정)
+- `docs/architecture.md`: MVVM과 Compose 설명, 데이터 흐름, 새 화면 추가 체크리스트
+- `docs/decisions.md`: 설계 결정 기록 (새 결정은 번호를 이어서 추가)
 - `../doc/구독관리앱-사이드프로젝트.md`: 전체 기획서 (저장소 밖, 마일스톤과 결제일 계산 규칙 표)
