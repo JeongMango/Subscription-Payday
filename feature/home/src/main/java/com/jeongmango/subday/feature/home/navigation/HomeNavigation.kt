@@ -15,9 +15,14 @@ data object HomeRoute
  */
 fun NavGraphBuilder.homeScreen(
     onAddClick: () -> Unit,
+    onSubscriptionClick: (subscriptionId: Long) -> Unit,
     onSettingsClick: () -> Unit,
 ) {
     composable<HomeRoute> {
-        HomeScreen(onAddClick = onAddClick, onSettingsClick = onSettingsClick)
+        HomeScreen(
+            onAddClick = onAddClick,
+            onSubscriptionClick = onSubscriptionClick,
+            onSettingsClick = onSettingsClick,
+        )
     }
 }

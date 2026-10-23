@@ -137,3 +137,26 @@
 
 - **선택:** `core/data/schemas/`에 DB 구조 JSON을 내보내고 커밋
 - **이유:** 나중에 테이블 구조를 바꿀 때(version 2) 이전 구조와 비교해 마이그레이션을 작성하고 테스트하는 기준이 됨. 출시 후에 DB 구조를 바꾸면 기존 사용자 데이터가 날아가지 않도록 마이그레이션이 필수
+
+## 21. 등록과 수정은 한 화면, 경로에 id를 담음 (2026-10-23)
+
+- **선택:** `EditRoute(subscriptionId: Long = 0L)`. 0이면 새로 등록, 아니면 그 구독을 불러와 수정
+- **이유:** 입력 항목이 같아서 화면을 둘로 나누면 코드가 거의 복사됨
+- **ViewModel에서 꺼내는 법:** `savedStateHandle["subscriptionId"]`. Navigation이 경로의 값을 같은 이름으로 SavedStateHandle에 넣어 줌. `toRoute()` 대신 이 방식을 쓰면 단위 테스트에서 `SavedStateHandle(mapOf(...))`로 바로 흉내 낼 수 있음
+
+## 22. 입력값은 글자 그대로 UiState에 두고, 저장할 때 검증 (2026-10-23)
+
+- **선택:** 금액을 `amountText: String`으로 들고 있다가 저장 버튼에서 `toLongOrNull()`로 변환하고 검증
+- **이유:** 사용자가 지우는 중에는 빈칸이 정상인데, 처음부터 Long으로 두면 빈칸을 표현할 수 없음. 에러는 저장을 눌렀을 때만 보여 주고, 다시 입력하면 지움
+
+## 23. 저장·삭제 완료는 isDone 상태로 알리고 화면이 뒤로 감 (2026-10-23)
+
+- **선택:** ViewModel은 `isDone = true`만 바꾸고, 화면이 `LaunchedEffect`로 보고 `onBackClick()` 호출
+- **이유:** ViewModel이 NavController(화면 이동)를 알면 테스트가 어려워지고 화면 코드에 의존하게 됨. ViewModel은 "끝났다"는 사실만 상태로 알림
+- **나중에:** 화면 이동이 여러 종류가 되면 일회성 이벤트(Channel)로 바꾸는 것을 검토
+
+## 24. 테스트 도우미는 모듈마다 복사 (2026-10-23)
+
+- **선택:** `MainDispatcherRule`, `FakeSubscriptionRepository`를 feature:home과 feature:edit 테스트에 각각 둠
+- **이유:** 아직 두 곳뿐이라 공통 모듈을 만드는 비용이 더 큼. 화면마다 가짜의 필요한 기능도 다름 (홈은 목록 흘려보내기, 등록은 저장 내용 확인)
+- **나중에:** feature가 늘어나면 `core:testing` 모듈로 모음 (Now in Android 방식)

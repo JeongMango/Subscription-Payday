@@ -20,7 +20,8 @@ fun SubDayNavHost() {
 
     NavHost(navController = navController, startDestination = HomeRoute) {
         homeScreen(
-            onAddClick = navController::navigateToEdit,
+            onAddClick = { navController.navigateToEdit() },                    // 새로 등록
+            onSubscriptionClick = { id -> navController.navigateToEdit(id) },   // 이 구독 수정
             onSettingsClick = navController::navigateToSettings,
         )
         editScreen(onBackClick = navController::popBackStack)

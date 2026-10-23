@@ -15,6 +15,9 @@ interface SubscriptionDao {
     @Query("SELECT * FROM subscriptions")
     fun observeAll(): Flow<List<SubscriptionEntity>>
 
+    @Query("SELECT * FROM subscriptions WHERE id = :id")
+    suspend fun getById(id: Long): SubscriptionEntity?
+
     /** id가 0이면 새로 추가, 이미 있는 id면 수정합니다. 추가된 행의 id를 돌려줍니다. */
     @Upsert
     suspend fun upsert(subscription: SubscriptionEntity): Long

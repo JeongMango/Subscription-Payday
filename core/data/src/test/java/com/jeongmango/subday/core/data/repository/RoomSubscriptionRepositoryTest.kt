@@ -90,6 +90,37 @@ class RoomSubscriptionRepositoryTest {
         assertEquals(listOf(keepId), repository.observeSubscriptions().first().map { it.id })
     }
 
+    @Test
+    fun `saveSubscription - 새 구독은 id를 새로 받고, 수정하면 같은 id를 유지한다`() = runTest {
+        val newId = repository.saveSubscription(model(id = 0, name = "넷플릭스"))
+        val updatedId = repository.saveSubscription(model(id = newId, name = "넷플릭스 프리미엄"))
+
+        assertEquals(newId, updatedId)
+        assertEquals("넷플릭스 프리미엄", repository.getSubscription(newId)?.name)
+    }
+
+    @Test
+    fun `getSubscription - 없는 id면 null`() = runTest {
+        assertEquals(null, repository.getSubscription(999))
+    }
+
+    @Test
+    fun `deleteSubscription - 삭제하면 조회되지 않는다`() = runTest {
+        val id = repository.saveSubscription(model(id = 0, name = "넷플릭스"))
+
+        repository.deleteSubscription(id)
+
+        assertEquals(null, repository.getSubscription(id))
+    }
+
+    private fun model(id: Long, name: String) = Subscription(
+        id = id,
+        name = name,
+        amount = 17_000,
+        billingCycle = BillingCycle.MONTHLY,
+        firstBillingDate = LocalDate.of(2026, 1, 31),
+    )
+
     private fun entity(id: Long = 0, name: String, freeTrialEnd: LocalDate? = null) = SubscriptionEntity(
         id = id,
         name = name,

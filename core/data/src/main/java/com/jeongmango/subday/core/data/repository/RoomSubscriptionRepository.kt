@@ -1,6 +1,7 @@
 package com.jeongmango.subday.core.data.repository
 
 import com.jeongmango.subday.core.data.local.SubscriptionDao
+import com.jeongmango.subday.core.data.local.toEntity
 import com.jeongmango.subday.core.data.local.toModel
 import com.jeongmango.subday.core.domain.repository.SubscriptionRepository
 import com.jeongmango.subday.core.model.Subscription
@@ -18,4 +19,14 @@ internal class RoomSubscriptionRepository @Inject constructor(
 
     override fun observeSubscriptions(): Flow<List<Subscription>> =
         dao.observeAll().map { entities -> entities.map { it.toModel() } }
+
+    override suspend fun getSubscription(id: Long): Subscription? = dao.getById(id)?.toModel()
+
+    override suspend fun saveSubscription(subscription: Subscription): Long {
+        val rowId = dao.upsert(subscription.toEntity())
+        // Upsert는 수정일 때 -1을 돌려주므로, 그때는 원래 id를 씁니다.
+        return if (subscription.id == 0L) rowId else subscription.id
+    }
+
+    override suspend fun deleteSubscription(id: Long) = dao.deleteById(id)
 }

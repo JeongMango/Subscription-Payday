@@ -11,4 +11,12 @@ import kotlinx.coroutines.flow.Flow
 interface SubscriptionRepository {
     /** 구독 목록. 데이터가 바뀔 때마다 새 목록이 흘러나옵니다. */
     fun observeSubscriptions(): Flow<List<Subscription>>
+
+    /** 구독 하나. 없으면 null */
+    suspend fun getSubscription(id: Long): Subscription?
+
+    /** id가 0이면 새로 추가, 아니면 수정합니다. 저장된 구독의 id를 돌려줍니다. */
+    suspend fun saveSubscription(subscription: Subscription): Long
+
+    suspend fun deleteSubscription(id: Long)
 }

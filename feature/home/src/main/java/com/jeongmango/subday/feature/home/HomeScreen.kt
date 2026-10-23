@@ -47,6 +47,7 @@ import java.util.Locale
 @Composable
 internal fun HomeScreen(
     onAddClick: () -> Unit,
+    onSubscriptionClick: (Long) -> Unit,
     onSettingsClick: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -55,6 +56,7 @@ internal fun HomeScreen(
     HomeContent(
         uiState = uiState,
         onAddClick = onAddClick,
+        onSubscriptionClick = onSubscriptionClick,
         onSettingsClick = onSettingsClick,
     )
 }
@@ -68,6 +70,7 @@ internal fun HomeScreen(
 internal fun HomeContent(
     uiState: HomeUiState,
     onAddClick: () -> Unit,
+    onSubscriptionClick: (Long) -> Unit,
     onSettingsClick: () -> Unit,
 ) {
     Scaffold(
@@ -101,7 +104,11 @@ internal fun HomeContent(
                 if (uiState.items.isEmpty()) {
                     EmptySubscriptions(modifier = Modifier.padding(innerPadding))
                 } else {
-                    SubscriptionList(state = uiState, contentPadding = innerPadding)
+                    SubscriptionList(
+                        state = uiState,
+                        contentPadding = innerPadding,
+                        onSubscriptionClick = onSubscriptionClick,
+                    )
                 }
         }
     }
@@ -126,7 +133,11 @@ private fun EmptySubscriptions(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun SubscriptionList(state: HomeUiState.Success, contentPadding: PaddingValues) {
+private fun SubscriptionList(
+    state: HomeUiState.Success,
+    contentPadding: PaddingValues,
+    onSubscriptionClick: (Long) -> Unit,
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(
@@ -145,15 +156,15 @@ private fun SubscriptionList(state: HomeUiState.Success, contentPadding: Padding
             }
         }
         items(state.items, key = { it.subscription.id }) { item ->
-            SubscriptionCard(item)
+            SubscriptionCard(item, onClick = { onSubscriptionClick(item.subscription.id) })
         }
     }
 }
 
 @Composable
-private fun SubscriptionCard(item: HomeSubscriptionItem) {
+private fun SubscriptionCard(item: HomeSubscriptionItem, onClick: () -> Unit) {
     val subscription = item.subscription
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -211,6 +222,7 @@ private fun HomeContentPreview() {
                 subscriptionCount = 2,
             ),
             onAddClick = {},
+            onSubscriptionClick = {},
             onSettingsClick = {},
         )
     }
@@ -220,7 +232,7 @@ private fun HomeContentPreview() {
 @Composable
 private fun HomeContentLoadingPreview() {
     SubDayTheme {
-        HomeContent(uiState = HomeUiState.Loading, onAddClick = {}, onSettingsClick = {})
+        HomeContent(uiState = HomeUiState.Loading, onAddClick = {}, onSubscriptionClick = {}, onSettingsClick = {})
     }
 }
 
@@ -236,6 +248,7 @@ private fun HomeContentEmptyPreview() {
                 subscriptionCount = 0,
             ),
             onAddClick = {},
+            onSubscriptionClick = {},
             onSettingsClick = {},
         )
     }
