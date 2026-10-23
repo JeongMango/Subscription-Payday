@@ -141,6 +141,7 @@ private fun SubscriptionList(state: HomeUiState.Success, contentPadding: Padding
             Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 Text("${state.month.monthValue}월 예상 지출", style = MaterialTheme.typography.labelLarge)
                 Text(formatWon(state.monthlySpending), style = MaterialTheme.typography.headlineMedium)
+                Text("구독 ${state.subscriptionCount}개", style = MaterialTheme.typography.bodyMedium)
             }
         }
         items(state.items, key = { it.subscription.id }) { item ->
@@ -207,6 +208,7 @@ private fun HomeContentPreview() {
                 ),
                 month = YearMonth.of(2026, 10),
                 monthlySpending = 31_900,
+                subscriptionCount = 2,
             ),
             onAddClick = {},
             onSettingsClick = {},
@@ -227,7 +229,12 @@ private fun HomeContentLoadingPreview() {
 private fun HomeContentEmptyPreview() {
     SubDayTheme {
         HomeContent(
-            uiState = HomeUiState.Success(items = emptyList(), month = YearMonth.of(2026, 10), monthlySpending = 0),
+            uiState = HomeUiState.Success(
+                items = emptyList(),
+                month = YearMonth.of(2026, 10),
+                monthlySpending = 0,
+                subscriptionCount = 0,
+            ),
             onAddClick = {},
             onSettingsClick = {},
         )

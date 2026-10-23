@@ -92,13 +92,33 @@ class HomeViewModelTest {
     }
 
     @Test
+    fun `등록된 구독 개수를 센다`() = runTest {
+        startCollecting()
+
+        repository.emit(
+            listOf(
+                subscription(id = 1),
+                subscription(id = 2),
+                subscription(id = 3),
+            ),
+        )
+
+        assertEquals(3, successState().subscriptionCount)
+    }
+
+    @Test
     fun `구독이 없으면 빈 목록과 지출 0원을 보여준다`() = runTest {
         startCollecting()
 
         repository.emit(emptyList())
 
         assertEquals(
-            HomeUiState.Success(items = emptyList(), month = YearMonth.of(2026, 10), monthlySpending = 0),
+            HomeUiState.Success(
+                items = emptyList(),
+                month = YearMonth.of(2026, 10),
+                monthlySpending = 0,
+                subscriptionCount = 0,
+            ),
             viewModel.uiState.value,
         )
     }

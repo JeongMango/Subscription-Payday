@@ -18,6 +18,8 @@ sealed interface HomeUiState {
         val month: YearMonth,
         /** [month]에 실제로 결제일이 있는 금액의 합 */
         val monthlySpending: Long,
+        /** 등록된 구독 개수 */
+        val subscriptionCount: Int,
     ) : HomeUiState
 }
 

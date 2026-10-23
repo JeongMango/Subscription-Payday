@@ -46,6 +46,7 @@ class HomeViewModel @Inject constructor(
                     .sortedBy { it.nextBillingDate },
                 month = month,
                 monthlySpending = BillingCalculator.spendingInMonth(subscriptions, month),
+                subscriptionCount = subscriptions.size,
             )
         }
         .stateIn(
