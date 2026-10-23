@@ -114,3 +114,26 @@
 - **이유:** D-day와 이번 달 지출은 "오늘"에 따라 결과가 달라짐. 테스트에서는 `Clock.fixed(...)`로 2026년 10월 21일을 고정해서, 실행하는 날과 상관없이 같은 결과를 확인함
 - **위치:** Clock은 데이터도 화면도 아닌 앱 전체 설정이라 조립 담당인 `app`에 둠
 - **버린 대안:** ViewModel에서 `LocalDate.now()` 직접 호출 (테스트 결과가 날마다 달라짐)
+
+## 17. DB용 모양(Entity)과 앱 모양(Model)을 나눔 (2026-10-23)
+
+- **선택:** `SubscriptionEntity`(core:data, Room 표시 포함)와 `Subscription`(core:model, 순수 Kotlin)을 따로 두고 `toModel()`, `toEntity()`로 변환
+- **이유:** core:model은 Android와 Room을 모르는 순수 Kotlin 모듈이라 Room의 `@Entity`를 붙일 수 없음. 또 DB 컬럼 이름이나 구조가 바뀌어도 앱 전체가 쓰는 Subscription은 그대로 두고 변환 함수만 고치면 됨
+- **버린 대안:** Subscription에 바로 `@Entity`를 붙이기. 파일은 줄지만 core:model이 Room에 의존하게 되고, DB 구조 변경이 화면까지 퍼짐
+
+## 18. M2에서 Repository 구현만 교체 (2026-10-23)
+
+- **결과:** `InMemorySubscriptionRepository` → `RoomSubscriptionRepository`로 바꾸면서 `DataModule`의 바인딩 한 줄만 고침. `HomeViewModel`은 변경 0줄 (git diff로 확인)
+- **화면 변경:** DB가 처음에 비어 있어서 홈에 빈 화면 안내만 추가함. Room 때문이 아니라 "구독이 없는 상태"라는 새 UI가 필요해진 것
+- **의미:** decisions.md 10번에서 예상한 대로, ViewModel이 Repository 인터페이스에만 의존한 덕분
+
+## 19. DB 테스트는 Robolectric + 메모리 DB (2026-10-23)
+
+- **선택:** `core:data`의 `src/test/`에서 Robolectric으로 Room 메모리 DB를 띄워 저장·조회·수정·삭제를 확인
+- **이유:** 에뮬레이터 없이 PC에서 돌아서 CI의 `./gradlew test`에 그대로 포함됨. 메모리 DB라 테스트끼리 데이터가 섞이지 않음
+- **버린 대안:** `src/androidTest/`(실제 기기 테스트). 더 정확하지만 에뮬레이터가 필요해서 CI가 느려짐
+
+## 20. Room 스키마를 저장소에 커밋 (2026-10-23)
+
+- **선택:** `core/data/schemas/`에 DB 구조 JSON을 내보내고 커밋
+- **이유:** 나중에 테이블 구조를 바꿀 때(version 2) 이전 구조와 비교해 마이그레이션을 작성하고 테스트하는 기준이 됨. 출시 후에 DB 구조를 바꾸면 기존 사용자 데이터가 날아가지 않도록 마이그레이션이 필수

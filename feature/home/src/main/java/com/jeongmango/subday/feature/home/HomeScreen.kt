@@ -97,11 +97,31 @@ internal fun HomeContent(
                 CircularProgressIndicator()
             }
 
-            is HomeUiState.Success -> SubscriptionList(
-                state = uiState,
-                contentPadding = innerPadding,
-            )
+            is HomeUiState.Success ->
+                if (uiState.items.isEmpty()) {
+                    EmptySubscriptions(modifier = Modifier.padding(innerPadding))
+                } else {
+                    SubscriptionList(state = uiState, contentPadding = innerPadding)
+                }
         }
+    }
+}
+
+@Composable
+private fun EmptySubscriptions(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text("등록된 구독이 없어요", style = MaterialTheme.typography.titleMedium)
+        Text(
+            text = "+ 버튼을 눌러 첫 구독을 추가해 보세요",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(top = 8.dp),
+        )
     }
 }
 
@@ -199,5 +219,17 @@ private fun HomeContentPreview() {
 private fun HomeContentLoadingPreview() {
     SubDayTheme {
         HomeContent(uiState = HomeUiState.Loading, onAddClick = {}, onSettingsClick = {})
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HomeContentEmptyPreview() {
+    SubDayTheme {
+        HomeContent(
+            uiState = HomeUiState.Success(items = emptyList(), month = YearMonth.of(2026, 10), monthlySpending = 0),
+            onAddClick = {},
+            onSettingsClick = {},
+        )
     }
 }
