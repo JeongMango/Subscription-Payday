@@ -107,3 +107,10 @@
 - **선택:** `BillingCalculator`의 모든 함수가 `today: LocalDate`를 받음. `object`로 만들어 상태가 없음
 - **이유:** 함수 안에서 `LocalDate.now()`를 부르면 테스트 결과가 실행하는 날마다 달라짐. 파라미터로 받으면 "2028년 2월 1일"처럼 원하는 날을 고정해서 테스트할 수 있음
 - **나중에:** ViewModel에서 오늘 날짜가 필요하면 `Clock`을 Hilt로 주입받아 `LocalDate.now(clock)`으로 구함
+
+## 16. 오늘 날짜는 Clock을 Hilt로 주입 (2026-10-22)
+
+- **선택:** `app`의 `AppModule`이 `Clock.systemDefaultZone()`을 제공하고, ViewModel은 `LocalDate.now(clock)`으로 오늘을 구함
+- **이유:** D-day와 이번 달 지출은 "오늘"에 따라 결과가 달라짐. 테스트에서는 `Clock.fixed(...)`로 2026년 10월 21일을 고정해서, 실행하는 날과 상관없이 같은 결과를 확인함
+- **위치:** Clock은 데이터도 화면도 아닌 앱 전체 설정이라 조립 담당인 `app`에 둠
+- **버린 대안:** ViewModel에서 `LocalDate.now()` 직접 호출 (테스트 결과가 날마다 달라짐)

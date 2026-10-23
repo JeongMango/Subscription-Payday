@@ -1,6 +1,8 @@
 package com.jeongmango.subday.feature.home
 
 import com.jeongmango.subday.core.model.Subscription
+import java.time.LocalDate
+import java.time.YearMonth
 
 /**
  * 홈 화면이 그릴 수 있는 모든 상태입니다.
@@ -11,8 +13,18 @@ sealed interface HomeUiState {
     data object Loading : HomeUiState
 
     data class Success(
-        val subscriptions: List<Subscription>,
-        /** 등록된 구독 금액의 단순 합계. M1에서 월 환산 기준의 이번 달 예상 지출로 바꿉니다. */
-        val totalAmount: Long,
+        /** 다음 결제일이 가까운 순 */
+        val items: List<HomeSubscriptionItem>,
+        val month: YearMonth,
+        /** [month]에 실제로 결제일이 있는 금액의 합 */
+        val monthlySpending: Long,
     ) : HomeUiState
 }
+
+/** 목록 한 줄에 필요한 값. 계산은 ViewModel에서 끝내고 화면은 그리기만 합니다. */
+data class HomeSubscriptionItem(
+    val subscription: Subscription,
+    val nextBillingDate: LocalDate,
+    /** 오늘이 결제일이면 0 */
+    val daysUntilBilling: Long,
+)
