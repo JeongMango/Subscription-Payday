@@ -160,3 +160,17 @@
 - **선택:** `MainDispatcherRule`, `FakeSubscriptionRepository`를 feature:home과 feature:edit 테스트에 각각 둠
 - **이유:** 아직 두 곳뿐이라 공통 모듈을 만드는 비용이 더 큼. 화면마다 가짜의 필요한 기능도 다름 (홈은 목록 흘려보내기, 등록은 저장 내용 확인)
 - **나중에:** feature가 늘어나면 `core:testing` 모듈로 모음 (Now in Android 방식)
+
+## 25. 설정은 DataStore(Preferences)에 저장 (2026-10-26)
+
+- **선택:** 알림 켜기·끄기, 며칠 전, 알림 시각을 Preferences DataStore에 키-값으로 저장. `SettingsRepository` 인터페이스는 core:domain, 구현은 core:data
+- **이유:** 값 3개짜리 설정이라 표(Room)가 필요 없음. SharedPreferences와 달리 Flow로 읽고, 저장이 메인 스레드를 막지 않음(suspend)
+- **버린 대안:** SharedPreferences(동기 API, 변경 감지가 불편), Room 테이블(설정 1줄을 위해 스키마·마이그레이션 관리), Proto DataStore(스키마 파일이 필요해서 지금 규모엔 과함)
+- **버전:** DataStore 1.3.0. AAR이 compileSdk 34, AGP 8.1.1 이상만 요구해서 현재 환경에서 사용 가능
+- **저장 형식:** 시각은 "자정부터 몇 분"인 Int로 저장 (09:30 → 570). 키 이름은 출시 후 바꾸지 않음
+
+## 26. 설정 화면 ViewModel은 상태를 직접 들지 않음 (2026-10-26)
+
+- **선택:** `SettingsViewModel`은 저장소의 Flow를 그대로 `uiState`로 내보내고, 입력이 오면 저장만 함. 저장된 값이 다시 Flow로 흘러와 화면이 바뀜
+- **이유:** 화면 상태와 저장 내용이 한 곳(DataStore)에서 나와서 어긋날 수 없음 (단일 진실 공급원, Single Source of Truth)
+- **등록 화면과 다른 이유:** 등록 화면은 "저장 버튼을 누르기 전까지는 저장하지 않는" 입력 중 상태가 있어서 ViewModel이 `MutableStateFlow`로 직접 들고 있음. 설정은 바꾸는 즉시 저장

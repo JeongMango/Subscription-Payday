@@ -1,6 +1,8 @@
 package com.jeongmango.subday.core.data.di
 
+import com.jeongmango.subday.core.data.repository.DataStoreSettingsRepository
 import com.jeongmango.subday.core.data.repository.RoomSubscriptionRepository
+import com.jeongmango.subday.core.domain.repository.SettingsRepository
 import com.jeongmango.subday.core.domain.repository.SubscriptionRepository
 import dagger.Binds
 import dagger.Module
@@ -20,4 +22,8 @@ internal abstract class DataModule {
     @Binds
     @Singleton
     abstract fun bindSubscriptionRepository(impl: RoomSubscriptionRepository): SubscriptionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSettingsRepository(impl: DataStoreSettingsRepository): SettingsRepository
 }
