@@ -27,6 +27,7 @@ android {
 dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.core.data)
+    implementation(projects.core.notification)
     implementation(projects.feature.home)
     implementation(projects.feature.edit)
     implementation(projects.feature.settings)
@@ -34,6 +35,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
+    // SubDayApplication에서 WorkManager를 Hilt와 연결할 때 씁니다.
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.work)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

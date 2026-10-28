@@ -174,3 +174,19 @@
 - **선택:** `SettingsViewModel`은 저장소의 Flow를 그대로 `uiState`로 내보내고, 입력이 오면 저장만 함. 저장된 값이 다시 Flow로 흘러와 화면이 바뀜
 - **이유:** 화면 상태와 저장 내용이 한 곳(DataStore)에서 나와서 어긋날 수 없음 (단일 진실 공급원, Single Source of Truth)
 - **등록 화면과 다른 이유:** 등록 화면은 "저장 버튼을 누르기 전까지는 저장하지 않는" 입력 중 상태가 있어서 ViewModel이 `MutableStateFlow`로 직접 들고 있음. 설정은 바꾸는 즉시 저장
+
+## 27. 알림은 "하루 한 번 확인하는 작업" 하나로 예약 (2026-10-28)
+
+- **선택:** WorkManager에 `ReminderWorker` 하나만 예약. 매일 알림 시각에 실행되어 오늘 알릴 구독을 고르고 알림을 띄운 뒤, 내일 같은 시각으로 다시 예약
+- **이유:** 구독을 추가·수정·삭제할 때마다 예약을 고칠 필요가 없음. 워커가 실행되는 순간의 최신 구독 목록을 읽기 때문. 예약이 항상 1개라 관리가 단순함
+- **버린 대안:** 구독마다 알림을 따로 예약(수정·삭제·설정 변경 때마다 전부 다시 계산해야 함), `PeriodicWorkRequest`(24시간 주기라 정확한 시각을 지정할 수 없고 시간이 점점 밀림), `AlarmManager` 정확한 알람(Android 12부터 별도 권한이 필요하고, 재부팅 후 직접 다시 등록해야 함)
+- **재부팅:** WorkManager가 예약을 자체 DB에 저장하고 부팅 후 다시 등록함. 에뮬레이터 재부팅 후 앱을 열지 않아도 예약이 남아 있는 것 확인
+- **한계:** 기기가 알림 시각부터 자정까지 계속 꺼져 있으면 그날 알림은 건너뜀. 다음 날 확인할 때는 다음 날 기준으로 계산하기 때문
+
+## 28. "누구에게 언제"는 core:domain, "어떻게 띄우나"는 core:notification (2026-10-28)
+
+- **선택:** 알림 대상 고르기와 다음 실행 시각 계산은 `ReminderPlanner`(순수 Kotlin, 테스트 7개). Worker, 알림 채널, 권한 확인은 `core:notification`
+- **이유:** 날짜 규칙은 JVM 테스트로 빠르게 검증하고, Android에 묶인 코드는 얇게 유지. BillingCalculator와 같은 방식
+- **Worker 안에서 다음 예약:** `REPLACE`를 쓰면 지금 실행 중인 자기 자신이 취소되므로 `APPEND_OR_REPLACE`로 현재 작업 뒤에 이어 붙임. 설정 화면에서 값을 바꿀 때는 `REPLACE`로 기존 예약을 새 시각으로 교체
+- **Hilt 연결:** `@HiltWorker` + `SubDayApplication`이 `Configuration.Provider` 구현. WorkManager 기본 초기화는 Manifest에서 끔. 이걸 안 하면 Worker에 Repository를 주입할 수 없음
+- **알림을 누르면:** core:notification은 MainActivity를 모르므로(app 모듈) `getLaunchIntentForPackage`로 앱 시작 화면을 엶
