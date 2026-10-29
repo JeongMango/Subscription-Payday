@@ -1,5 +1,10 @@
 package com.jeongmango.subday.feature.home
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,11 +29,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -53,12 +64,41 @@ internal fun HomeScreen(
 ) {
     // StateFlow를 Compose 상태로 바꿉니다. 값이 바뀌면 화면이 자동으로 다시 그려집니다.
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // 구독이 하나라도 생기면 알림 권한을 요청합니다. 알릴 구독이 없을 때 먼저 묻지 않습니다.
+    val hasSubscriptions = (uiState as? HomeUiState.Success)?.items?.isNotEmpty() == true
+    RequestNotificationPermission(enabled = hasSubscriptions)
+
     HomeContent(
         uiState = uiState,
         onAddClick = onAddClick,
         onSubscriptionClick = onSubscriptionClick,
         onSettingsClick = onSettingsClick,
     )
+}
+
+/**
+ * Android 13(API 33)부터는 알림을 띄우기 전에 사용자에게 허용을 받아야 합니다.
+ * 시스템 권한 창은 Activity가 있어야 띄울 수 있어서 ViewModel이 아닌 화면에서 요청합니다.
+ * 사용자가 두 번 거절하면 시스템이 더 이상 창을 띄우지 않습니다. 그 뒤로는 설정 화면에서 안내합니다.
+ */
+@Composable
+private fun RequestNotificationPermission(enabled: Boolean) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+
+    val context = LocalContext.current
+    // 화면 회전 등으로 다시 그려져도 한 번만 묻도록 기억합니다.
+    var asked by rememberSaveable { mutableStateOf(false) }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+
+    LaunchedEffect(enabled) {
+        val granted = ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
+            PackageManager.PERMISSION_GRANTED
+        if (enabled && !granted && !asked) {
+            asked = true
+            launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
 }
 
 /**

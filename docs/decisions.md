@@ -190,3 +190,11 @@
 - **Worker 안에서 다음 예약:** `REPLACE`를 쓰면 지금 실행 중인 자기 자신이 취소되므로 `APPEND_OR_REPLACE`로 현재 작업 뒤에 이어 붙임. 설정 화면에서 값을 바꿀 때는 `REPLACE`로 기존 예약을 새 시각으로 교체
 - **Hilt 연결:** `@HiltWorker` + `SubDayApplication`이 `Configuration.Provider` 구현. WorkManager 기본 초기화는 Manifest에서 끔. 이걸 안 하면 Worker에 Repository를 주입할 수 없음
 - **알림을 누르면:** core:notification은 MainActivity를 모르므로(app 모듈) `getLaunchIntentForPackage`로 앱 시작 화면을 엶
+
+## 29. 알림 권한은 구독이 생겼을 때 묻고, 거절하면 설정 화면에서 안내 (2026-10-29)
+
+- **선택:** 홈 화면에서 구독이 1개 이상 있고 권한이 없을 때 `POST_NOTIFICATIONS`를 요청 (Android 13 이상). 설정 화면은 화면이 보일 때마다 `areNotificationsEnabled()`로 확인해서, 꺼져 있으면 경고를 보여 주고 누르면 기기의 앱 알림 설정을 엶
+- **이유:** 알릴 구독이 없는데 처음 실행하자마자 물으면 사용자가 이유를 몰라 거절하기 쉬움. 시스템은 두 번 거절하면 권한 창을 더 띄우지 않으므로, 그 뒤에도 허용할 수 있는 길(기기 설정)을 남겨 둠
+- **ViewModel이 아닌 Screen에 둔 이유:** 권한 창은 Activity가 있어야 띄울 수 있고, 권한 상태는 사용자가 앱 밖에서 바꿀 수 있는 기기 상태라 저장소의 데이터가 아님
+- **`areNotificationsEnabled()`를 쓴 이유:** Android 12 이하에서도 사용자가 기기 설정에서 알림을 끌 수 있는데, 권한 확인(`checkSelfPermission`)으로는 이 경우를 알 수 없음
+- **확인:** 삼성 Galaxy S25(Android 16) 실기기에서 권한 창 → 거절 → 설정 화면 경고 → 기기 설정에서 허용 → 돌아오면 경고 사라짐
