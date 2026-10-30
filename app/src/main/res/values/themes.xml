@@ -6,4 +6,16 @@
     <style name="Theme.SubDay" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowBackground">@color/window_background</item>
     </style>
+
+    <!--
+        스플래시 화면 테마. 앱을 켤 때 MainActivity가 잠깐 이 테마로 시작해서
+        크림색 배경 + 망고 애니메이션(avd_splash)을 보여 주고, 끝나면 Theme.SubDay로 바뀝니다.
+        Android 12 미만에서는 애니메이션 없이 첫 장면(망고만)이 보입니다.
+    -->
+    <style name="Theme.SubDay.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/window_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/avd_splash</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.SubDay</item>
+    </style>
 </resources>

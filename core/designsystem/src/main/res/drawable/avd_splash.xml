@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    스플래시(앱을 켤 때) 애니메이션. 총 1초, 한 번만 재생합니다.
+      0 ~ 0.45초   망고 + 동전이 바닥에서 톡 튀어나옴 (40% → 100%, 살짝 넘쳤다 돌아오는 overshoot)
+      0.4 ~ 0.65초 오른쪽 위에서 "D-1" 말풍선이 뿅 커짐
+      0.65 ~ 1초   말풍선이 좌우로 흔들림 (띠딩)
+    android:name은 mascot_anim.xml의 group 이름과 같아야 합니다.
+-->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:drawable="@drawable/mascot_anim">
+
+    <target android:name="character">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="450"
+                    android:interpolator="@android:anim/overshoot_interpolator"
+                    android:propertyName="scaleX"
+                    android:valueFrom="0.4"
+                    android:valueTo="1" />
+                <objectAnimator
+                    android:duration="450"
+                    android:interpolator="@android:anim/overshoot_interpolator"
+                    android:propertyName="scaleY"
+                    android:valueFrom="0.4"
+                    android:valueTo="1" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <target android:name="bubble_pop">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="250"
+                    android:interpolator="@android:anim/overshoot_interpolator"
+                    android:propertyName="scaleX"
+                    android:startOffset="400"
+                    android:valueFrom="0"
+                    android:valueTo="1" />
+                <objectAnimator
+                    android:duration="250"
+                    android:interpolator="@android:anim/overshoot_interpolator"
+                    android:propertyName="scaleY"
+                    android:startOffset="400"
+                    android:valueFrom="0"
+                    android:valueTo="1" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <target android:name="bubble_ring">
+        <aapt:attr name="android:animation">
+            <!-- keyframe: 시간 비율(fraction)마다 각도를 정해 두면 그 사이를 자연스럽게 이어 줍니다 -->
+            <objectAnimator
+                android:duration="350"
+                android:startOffset="650">
+                <propertyValuesHolder
+                    android:propertyName="rotation"
+                    android:valueType="floatType">
+                    <keyframe android:fraction="0" android:value="0" />
+                    <keyframe android:fraction="0.25" android:value="-14" />
+                    <keyframe android:fraction="0.5" android:value="10" />
+                    <keyframe android:fraction="0.75" android:value="-5" />
+                    <keyframe android:fraction="1" android:value="0" />
+                </propertyValuesHolder>
+            </objectAnimator>
+        </aapt:attr>
+    </target>
+</animated-vector>

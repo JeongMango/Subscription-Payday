@@ -58,6 +58,7 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.navigation.compose)
     // SubDayApplication에서 WorkManager를 Hilt와 연결할 때 씁니다.
     implementation(libs.androidx.work.runtime.ktx)

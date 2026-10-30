@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    빈 화면용 말풍선 애니메이션 (0.6초). 망고는 그대로 있고 "D-1" 말풍선만 뿅 나와서 띠딩 흔들립니다.
+    반복은 Compose 코드(AnimatedMangoMascot)가 앞으로 재생 ↔ 거꾸로 재생을 번갈아 하며 만듭니다.
+-->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:drawable="@drawable/mascot_anim">
+
+    <target android:name="bubble_pop">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="250"
+                    android:interpolator="@android:anim/overshoot_interpolator"
+                    android:propertyName="scaleX"
+                    android:valueFrom="0"
+                    android:valueTo="1" />
+                <objectAnimator
+                    android:duration="250"
+                    android:interpolator="@android:anim/overshoot_interpolator"
+                    android:propertyName="scaleY"
+                    android:valueFrom="0"
+                    android:valueTo="1" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <target android:name="bubble_ring">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="350"
+                android:startOffset="250">
+                <propertyValuesHolder
+                    android:propertyName="rotation"
+                    android:valueType="floatType">
+                    <keyframe android:fraction="0" android:value="0" />
+                    <keyframe android:fraction="0.25" android:value="-14" />
+                    <keyframe android:fraction="0.5" android:value="10" />
+                    <keyframe android:fraction="0.75" android:value="-5" />
+                    <keyframe android:fraction="1" android:value="0" />
+                </propertyValuesHolder>
+            </objectAnimator>
+        </aapt:attr>
+    </target>
+</animated-vector>

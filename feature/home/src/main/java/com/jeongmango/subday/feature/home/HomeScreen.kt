@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.jeongmango.subday.core.designsystem.component.AnimatedMangoMascot
 import com.jeongmango.subday.core.designsystem.component.MangoMascot
 import com.jeongmango.subday.core.designsystem.theme.Apricot
 import com.jeongmango.subday.core.designsystem.theme.Cocoa
@@ -193,11 +194,11 @@ private fun EmptySubscriptions(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        MangoMascot(modifier = Modifier.size(width = 170.dp, height = 160.dp))
+        // 그림 둘레 여백이 있어서 크게 잡습니다. 망고 자체는 약 170dp 크기로 보입니다.
+        AnimatedMangoMascot(modifier = Modifier.size(260.dp))
         Text(
             text = "등록된 구독이 없어요",
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(top = 24.dp),
         )
         Text(
             text = "구독을 추가하면 결제일 전에\n망고가 먼저 알려 드릴게요",
