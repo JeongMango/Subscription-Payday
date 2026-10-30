@@ -17,3 +17,8 @@ local.properties
 # 개인 계획서 (로컬 전용)
 /구독관리앱-사이드프로젝트.md
 .kotlin/
+
+# 업로드 키와 비밀번호. 절대 커밋하지 않습니다 (잃어버리거나 유출되면 Play Console에서 키 재설정 필요)
+keystore.properties
+*.jks
+*.keystore
