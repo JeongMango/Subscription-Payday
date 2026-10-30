@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="18 18 72 72"><defs>
+ <linearGradient id="bg" x1="22" y1="18" x2="86" y2="92" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFE7B8"/><stop offset="1" stop-color="#FFB547"/></linearGradient>
+ <radialGradient id="glow" cx="30" cy="24" r="50" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.6"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></radialGradient>
+ <radialGradient id="shadow" cx="0" cy="0" r="22" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#8A3B00" stop-opacity="0.35"/><stop offset="1" stop-color="#8A3B00" stop-opacity="0"/></radialGradient>
+ <radialGradient id="mango" cx="-7" cy="-11" r="34" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF8B0"/><stop offset="0.4" stop-color="#FFC928"/><stop offset="0.75" stop-color="#FF9800"/><stop offset="1" stop-color="#FF8A00"/></radialGradient>
+ <linearGradient id="leaf" x1="4" y1="-27" x2="18" y2="-19" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#AED581"/><stop offset="1" stop-color="#4E8A2A"/></linearGradient>
+ <radialGradient id="coin" cx="-3" cy="-4" r="12" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF3B0"/><stop offset="0.5" stop-color="#FFCA28"/><stop offset="1" stop-color="#E08A00"/></radialGradient>
+ <linearGradient id="coinEdge" x1="0" y1="-8" x2="0" y2="11" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#E69500"/><stop offset="1" stop-color="#A85400"/></linearGradient>
+ <linearGradient id="bubble" x1="0" y1="-8" x2="0" y2="8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF6B5E"/><stop offset="1" stop-color="#D32F2F"/></linearGradient>
+ <linearGradient id="page" x1="0" y1="34" x2="0" y2="80" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#FFEBD6"/></linearGradient>
+ <linearGradient id="head" x1="0" y1="34" x2="0" y2="46" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF6B5E"/><stop offset="1" stop-color="#D32F2F"/></linearGradient>
+ <linearGradient id="ring" x1="0" y1="29" x2="0" y2="41" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#5B6B78"/><stop offset="1" stop-color="#1F2933"/></linearGradient>
+<radialGradient id="greenTop" cx="4" cy="-24" r="16" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#9CCC65" stop-opacity="0.75"/><stop offset="1" stop-color="#9CCC65" stop-opacity="0"/></radialGradient>
+ <radialGradient id="blush" cx="12" cy="16" r="18" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#F4511E" stop-opacity="0.7"/><stop offset="1" stop-color="#F4511E" stop-opacity="0"/></radialGradient>
+<radialGradient id="coin2" cx="-5" cy="-6" r="20" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF3B0"/><stop offset="0.5" stop-color="#FFCA28"/><stop offset="1" stop-color="#E08A00"/></radialGradient>
+ <linearGradient id="coinEdge2" x1="-17" y1="0" x2="20" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#E69500"/><stop offset="1" stop-color="#A85400"/></linearGradient>
+</defs> <rect width="108" height="108" fill="url(#bg)"/><rect width="108" height="108" fill="url(#glow)"/>
+ <g transform="translate(54 83) scale(1 0.18)"><circle r="27" fill="url(#shadow)"/></g>
+ <g transform="translate(68.5 63)"><g>
+ <circle cx="2.5" cy="0" r="17" fill="url(#coinEdge2)"/>
+ <circle r="17" fill="url(#coin2)"/>
+ <circle r="13" fill="none" stroke="#D88A00" stroke-width="1.3" opacity="0.6"/>
+ <path d="M-6.8,-6.8L-3.4,6.8L0,-2.3L3.4,6.8L6.8,-6.8" stroke="#B86400" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+ <path d="M-9,-0.7h18M-9,3.1h18" stroke="#B86400" stroke-width="1.7" stroke-linecap="round"/>
+ <path d="M-11,-7c2.2,-4 5.8,-6.3 9.8,-6.8" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.8"/>
+</g></g>
+ <g transform="translate(40 61) rotate(10)">
+  <g transform="rotate(-14)">
+   <path d="M3,-24C15,-23 21,-10 19,5C17,17 7,24 -4,23C-13,22 -19,13 -19,1C-19,-13 -10,-24.5 3,-24z" fill="url(#mango)"/>
+   <path d="M3,-24C15,-23 21,-10 19,5C17,17 7,24 -4,23C-13,22 -19,13 -19,1C-19,-13 -10,-24.5 3,-24z" fill="url(#greenTop)"/>
+   <path d="M3,-24C15,-23 21,-10 19,5C17,17 7,24 -4,23C-13,22 -19,13 -19,1C-19,-13 -10,-24.5 3,-24z" fill="url(#blush)"/>
+   <path d="M3,-23.5l0.8,-4.5" stroke="#6D4C41" stroke-width="1.8" stroke-linecap="round"/>
+   <path d="M4,-26C7,-33 16,-34 21,-30C16,-25 10,-24 4,-26z" fill="url(#leaf)"/>
+   <path d="M6,-26.5C10,-28.5 14,-29.5 18,-29.8" stroke="#E8F5C8" stroke-width="0.7" stroke-linecap="round" fill="none" opacity="0.8"/>
+  </g>
+  <path d="M-13,-12c2,-4 5.5,-6.5 9.5,-7.2" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" fill="none" opacity="0.75"/>
+  <ellipse cx="-6.5" cy="-3" rx="2.1" ry="2.9" fill="#3E2723"/><ellipse cx="6.5" cy="-3" rx="2.1" ry="2.9" fill="#3E2723"/>
+  <circle cx="-5.8" cy="-4" r="0.8" fill="#FFFFFF"/><circle cx="7.2" cy="-4" r="0.8" fill="#FFFFFF"/>
+  <ellipse cx="-12" cy="2.5" rx="3.2" ry="1.9" fill="#FF5A36" opacity="0.45"/><ellipse cx="12" cy="2.5" rx="3.2" ry="1.9" fill="#FF5A36" opacity="0.45"/>
+  <path d="M-2.6,1.8q2.6,2.8 5.2,0" stroke="#3E2723" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+  
+  
+ 
+  <ellipse cx="15" cy="6" rx="3.4" ry="2.8" fill="#FF9800"/>
+ </g>
+ <g transform="translate(67.5 35.5) scale(0.95)">
+  <path d="M-11,-7.5a4,4 0 0 1 4,-4h14a4,4 0 0 1 4,4v7a4,4 0 0 1 -4,4h-8l-5.5,5l1,-5h-1.5a4,4 0 0 1 -4,-4z" fill="#FFFFFF" transform="scale(1.12)"/>
+  <path d="M-11,-7.5a4,4 0 0 1 4,-4h14a4,4 0 0 1 4,4v7a4,4 0 0 1 -4,4h-8l-5.5,5l1,-5h-1.5a4,4 0 0 1 -4,-4z" fill="url(#bubble)"/>
+  <g transform="translate(0 -4) scale(0.72)"><path d="M-9,-5v10h2.2a5,5 0 0 0 0,-10z" stroke="#FFFFFF" stroke-width="2.2" stroke-linejoin="round" fill="none"/>
+ <path d="M0,0.3h3.4" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
+ <path d="M6.6,-3.2l2.2,-1.8v10" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g>
+ </g>
+</svg>

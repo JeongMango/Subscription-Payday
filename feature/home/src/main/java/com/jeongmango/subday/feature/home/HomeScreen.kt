@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,15 +14,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,13 +40,24 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.ContextCompat
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.jeongmango.subday.core.designsystem.component.MangoMascot
+import com.jeongmango.subday.core.designsystem.theme.Apricot
+import com.jeongmango.subday.core.designsystem.theme.Cocoa
+import com.jeongmango.subday.core.designsystem.theme.Mango
 import com.jeongmango.subday.core.designsystem.theme.SubDayTheme
 import com.jeongmango.subday.core.model.BillingCycle
 import com.jeongmango.subday.core.model.Subscription
@@ -116,7 +131,7 @@ internal fun HomeContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("SubDay") },
+                title = { BrandTitle() },
                 actions = {
                     IconButton(onClick = onSettingsClick) {
                         Icon(Icons.Default.Settings, contentDescription = "설정")
@@ -125,9 +140,12 @@ internal fun HomeContent(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddClick) {
-                Icon(Icons.Default.Add, contentDescription = "구독 추가")
-            }
+            // 아이콘만 있는 동그란 버튼 대신 글자를 함께 보여 줘서 처음 쓰는 사람도 바로 알 수 있게 합니다.
+            ExtendedFloatingActionButton(
+                onClick = onAddClick,
+                icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                text = { Text("구독 추가") },
+            )
         },
     ) { innerPadding ->
         when (uiState) {
@@ -154,6 +172,18 @@ internal fun HomeContent(
     }
 }
 
+/** "Sub"는 갈색, "Day"는 망고색으로 앱 이름을 보여 줍니다. */
+@Composable
+private fun BrandTitle() {
+    Text(
+        text = buildAnnotatedString {
+            append("Sub")
+            withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) { append("Day") }
+        },
+        style = MaterialTheme.typography.titleLarge,
+    )
+}
+
 @Composable
 private fun EmptySubscriptions(modifier: Modifier = Modifier) {
     Column(
@@ -163,10 +193,17 @@ private fun EmptySubscriptions(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text("등록된 구독이 없어요", style = MaterialTheme.typography.titleMedium)
+        MangoMascot(modifier = Modifier.size(width = 170.dp, height = 160.dp))
         Text(
-            text = "+ 버튼을 눌러 첫 구독을 추가해 보세요",
+            text = "등록된 구독이 없어요",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(top = 24.dp),
+        )
+        Text(
+            text = "구독을 추가하면 결제일 전에\n망고가 먼저 알려 드릴게요",
             style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 8.dp),
         )
     }
@@ -184,16 +221,18 @@ private fun SubscriptionList(
             start = 16.dp,
             end = 16.dp,
             top = contentPadding.calculateTopPadding() + 8.dp,
-            bottom = contentPadding.calculateBottomPadding() + 88.dp,
+            bottom = contentPadding.calculateBottomPadding() + 96.dp,
         ),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
+        item { SpendingSummaryCard(state) }
         item {
-            Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                Text("${state.month.monthValue}월 예상 지출", style = MaterialTheme.typography.labelLarge)
-                Text(formatWon(state.monthlySpending), style = MaterialTheme.typography.headlineMedium)
-                Text("구독 ${state.subscriptionCount}개", style = MaterialTheme.typography.bodyMedium)
-            }
+            Text(
+                text = "다가오는 결제",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 4.dp, top = 12.dp),
+            )
         }
         items(state.items, key = { it.subscription.id }) { item ->
             SubscriptionCard(item, onClick = { onSubscriptionClick(item.subscription.id) })
@@ -201,31 +240,110 @@ private fun SubscriptionList(
     }
 }
 
+/**
+ * 이번 달 예상 지출 카드. 앱 아이콘처럼 살구색 → 망고색 그라데이션 위에 망고 캐릭터를 올립니다.
+ * 브랜드 그림이라 어두운 모드에서도 같은 색을 씁니다 (글자도 그라데이션에 맞춘 고정 색).
+ */
+@Composable
+private fun SpendingSummaryCard(state: HomeUiState.Success) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.large)
+            .background(Brush.linearGradient(listOf(Apricot, Mango)))
+            .padding(start = 20.dp, top = 20.dp, bottom = 20.dp, end = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = "${state.month.monthValue}월 예상 지출",
+                style = MaterialTheme.typography.labelLarge,
+                color = Cocoa.copy(alpha = 0.75f),
+            )
+            Text(
+                text = formatWon(state.monthlySpending),
+                style = MaterialTheme.typography.headlineMedium,
+                color = Cocoa,
+                modifier = Modifier.padding(top = 4.dp),
+            )
+            Text(
+                text = "구독 ${state.subscriptionCount}개",
+                style = MaterialTheme.typography.labelMedium,
+                color = Cocoa,
+                modifier = Modifier
+                    .padding(top = 12.dp)
+                    .clip(CircleShape)
+                    .background(Color.White.copy(alpha = 0.6f))
+                    .padding(horizontal = 10.dp, vertical = 4.dp),
+            )
+        }
+        MangoMascot(modifier = Modifier.size(width = 102.dp, height = 96.dp))
+    }
+}
+
 @Composable
 private fun SubscriptionCard(item: HomeSubscriptionItem, onClick: () -> Unit) {
     val subscription = item.subscription
-    Card(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
+    Card(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Column {
+            // 서비스 로고 대신 이름 첫 글자를 동그라미에 넣어 목록에서 빨리 구분되게 합니다.
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.secondaryContainer),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = subscription.name.take(1).uppercase(),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 12.dp),
+            ) {
                 Text(subscription.name, style = MaterialTheme.typography.titleMedium)
                 Text(
-                    text = "다음 결제 ${item.nextBillingDate.monthValue}월 ${item.nextBillingDate.dayOfMonth}일 · ${dDayLabel(item.daysUntilBilling)}",
+                    text = "${item.nextBillingDate.monthValue}월 ${item.nextBillingDate.dayOfMonth}일 · ${subscription.billingCycle.label()}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (item.daysUntilBilling <= 3) MaterialTheme.colorScheme.primary else Color.Unspecified,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(formatWon(subscription.amount), style = MaterialTheme.typography.titleMedium)
-                Text(subscription.billingCycle.label(), style = MaterialTheme.typography.bodySmall)
+                DDayBadge(item.daysUntilBilling, modifier = Modifier.padding(top = 4.dp))
             }
         }
     }
+}
+
+/** D-day 알약 모양 표시. 3일 이내면 아이콘의 "D-1" 말풍선과 같은 빨강으로 눈에 띄게 합니다. */
+@Composable
+private fun DDayBadge(daysUntilBilling: Long, modifier: Modifier = Modifier) {
+    val urgent = daysUntilBilling <= 3
+    Text(
+        text = dDayLabel(daysUntilBilling),
+        style = MaterialTheme.typography.labelMedium,
+        fontWeight = FontWeight.Bold,
+        color = if (urgent) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = modifier
+            .clip(CircleShape)
+            .background(if (urgent) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surfaceContainerHigh)
+            .padding(horizontal = 8.dp, vertical = 2.dp),
+    )
 }
 
 private fun formatWon(amount: Long): String =
